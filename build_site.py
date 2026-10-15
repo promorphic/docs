@@ -32,8 +32,17 @@ PAGES = [
 ]
 LINKS = {src: dst for src, dst, _ in PAGES}
 
-MARK = ('<svg width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><rect width="18" height="11" fill="#f2efe8"/>'
-        '<rect y="13" width="32" height="6" fill="#f2b135"/><rect x="14" y="21" width="18" height="11" fill="#f2efe8"/></svg>')
+MARK = ('<svg class="mark" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><rect class="ink" width="18" height="11"/>'
+        '<rect y="13" width="32" height="6" fill="#f2b135"/><rect class="ink" x="14" y="21" width="18" height="11"/></svg>')
+TOGGLE = ('<button class="theme" type="button" aria-label="Switch between light and dark">'
+          '<svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>'
+          '<svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>')
+HEAD_JS = ("<script>(function(){var t=null;try{t=localStorage.getItem('pm-theme')}catch(e){}"
+           "if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';"
+           "document.documentElement.setAttribute('data-theme',t)})()</script>")
+TOGGLE_JS = ("<script>document.querySelector('.theme').addEventListener('click',function(){var r=document.documentElement,"
+             "cur=r.getAttribute('data-theme')||'dark',"
+             "n=cur==='light'?'dark':'light';r.setAttribute('data-theme',n);try{localStorage.setItem('pm-theme',n)}catch(e){}});</script>")
 FAVICON = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#0b0c0e"/>'
            '<g transform="translate(4 4) scale(.75)"><rect width="18" height="11" fill="#f2efe8"/><rect y="13" width="32" height="6" fill="#f2b135"/>'
            '<rect x="14" y="21" width="18" height="11" fill="#f2efe8"/></g></svg>')
@@ -42,8 +51,21 @@ CSS = """
 @font-face{font-family:"Schibsted Grotesk";src:url(assets/Schibsted.ttf);font-weight:100 900;font-display:swap}
 @font-face{font-family:"Geist Mono";src:url(assets/GeistMono.ttf);font-weight:100 900;font-display:swap}
 :root{--s0:#0b0c0e;--s1:#14161a;--s2:#1c1f24;--hair:#2a2e35;--ink:#f2efe8;--muted:#a8a49b;--faint:#8a867e;--brand:#f2b135;
---sans:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;--mono:"Geist Mono","SF Mono",Menlo,monospace}
+--sans:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;--mono:"Geist Mono","SF Mono",Menlo,monospace;color-scheme:dark}
+[data-theme=light]{--s0:#f7f5f0;--s1:#ffffff;--s2:#ede9e1;--hair:#d9d4ca;--ink:#14130f;--muted:#5c5950;--faint:#6e6a60;color-scheme:light}
+@media (prefers-color-scheme:light){:root:not([data-theme]){--s0:#f7f5f0;--s1:#ffffff;--s2:#ede9e1;--hair:#d9d4ca;--ink:#14130f;--muted:#5c5950;--faint:#6e6a60;color-scheme:light}}
 *{box-sizing:border-box}
+.fig-l{display:none}
+[data-theme=light] .fig-d{display:none}[data-theme=light] .fig-l{display:block}
+@media (prefers-color-scheme:light){:root:not([data-theme]) .fig-d{display:none}:root:not([data-theme]) .fig-l{display:block}}
+.mark .ink{fill:var(--ink)}
+.theme{width:56px;height:30px;border:1px solid var(--hair);border-radius:999px;background:var(--s1);position:relative;cursor:pointer;padding:0;margin-left:16px}
+.theme svg{position:absolute;top:7px;width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.6}
+.theme .sun{left:8px}.theme .moon{right:8px}
+.theme:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--ink);opacity:.14;transition:transform .15s}
+[data-theme=light] .theme:after{transform:translateX(0)}
+:root:not([data-theme=light]) .theme:after{transform:translateX(26px)}
+.theme:focus-visible{outline:1px solid var(--ink);outline-offset:2px}
 html{background:var(--s0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
 body{margin:0}
 a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--hair);text-underline-offset:3px}
@@ -93,11 +115,13 @@ PAGE = """<!doctype html>
 <meta name="description" content="Promorphic: AI treasury management for tokenized assets. Mandates, agents and vaults on Canton.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/docs.css">
+{head_js}
 </head><body>
 <header class="top"><a class="name" href="index.html">{mark}Promorphic</a><span class="tag">Docs</span><span class="sp"></span>
-<a class="out" href="https://promorphic.xyz">promorphic.xyz</a></header>
+<a class="out" href="https://promorphic.xyz">promorphic.xyz</a>{toggle}</header>
 <div class="wrap"><nav aria-label="Chapters"><div class="lab">Contents</div>{nav}</nav>
 <main><article>{body}</article>{pager}<footer>© 2026 Promorphic · Examples, issuers and numbers are fictional.</footer></main></div>
+{toggle_js}
 </body></html>"""
 
 
@@ -109,7 +133,13 @@ def convert(md_text):
     md_text = re.sub(r"\]\((figures/[^)]*)\)", r"](https://github.com/promorphic/docs/tree/main/\1)", md_text)
     html = markdown.markdown(md_text, extensions=["tables", "fenced_code", "toc", "attr_list"])
     # every figure opens full size, which matters on a phone
-    return re.sub(r'(<img [^>]*src="([^"]+)"[^>]*>)', r'<a href="\2">\1</a>', html)
+    # each figure ships in two themes; show the one that matches the page
+    def two(m):
+        tag, src = m.group(1), m.group(2)
+        light = src.replace(".png", "-light.png")
+        return (f'<a class="fig-d" href="{src}">{tag}</a>'
+                f'<a class="fig-l" href="{light}">{tag.replace(src, light)}</a>')
+    return re.sub(r'(<img [^>]*src="(img/[^"]+\.png)"[^>]*>)', two, html)
 
 
 def main():
@@ -128,7 +158,7 @@ def main():
         nav = "".join(f'<a href="{d}"{" class=on" if d == dst else ""}>{l}</a>' for _, d, l in PAGES)
         prev_ = f'<a class="prev" href="{PAGES[i-1][1]}"><span class="k">Previous</span>{PAGES[i-1][2]}</a>' if i > 0 else ""
         next_ = f'<a class="next" href="{PAGES[i+1][1]}"><span class="k">Next</span>{PAGES[i+1][2]}</a>' if i < len(PAGES) - 1 else ""
-        html = PAGE.format(title=title, mark=MARK, nav=nav, body=body, pager=f'<div class="pager">{prev_}{next_}</div>')
+        html = PAGE.format(head_js=HEAD_JS, toggle=TOGGLE, toggle_js=TOGGLE_JS, title=title, mark=MARK, nav=nav, body=body, pager=f'<div class="pager">{prev_}{next_}</div>')
         (OUT / dst).write_text(html)
     (OUT / "CNAME").write_text(DOMAIN + "\n")
     (OUT / ".nojekyll").write_text("")

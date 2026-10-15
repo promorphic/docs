@@ -40,9 +40,12 @@ NAMES = dict(line.split() for line in """01-1-thesis fig-1-1-thesis
 
 (HERE / "src").mkdir(exist_ok=True)
 (HERE / "out").mkdir(exist_ok=True)
-for script in ["figs_a.py", "figs_b.py", "figs_c.py", "mock.py"]:
-    subprocess.run([sys.executable, script], cwd=HERE, check=True)
+import os
+for theme in ["dark", "light"]:
+    for script in ["figs_a.py", "figs_b.py", "figs_c.py", "mock.py"]:
+        subprocess.run([sys.executable, script], cwd=HERE, check=True, env={**os.environ, "PM_THEME": theme})
 subprocess.run([sys.executable, "render.py"], cwd=HERE, check=True)
 for src, dst in NAMES.items():
-    shutil.copy(HERE / "out" / f"{src}.png", HERE.parent / "img" / f"{dst}.png")
-print(f"copied {len(NAMES)} images to ../img")
+    for sfx in ["", "-light"]:
+        shutil.copy(HERE / "out" / f"{src}{sfx}.png", HERE.parent / "img" / f"{dst}{sfx}.png")
+print(f"copied {2 * len(NAMES)} images to ../img (dark and light)")

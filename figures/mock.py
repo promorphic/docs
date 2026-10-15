@@ -1,6 +1,9 @@
 """Terminal mockups. One theme (dark), brand tokens, amber only for the mark, the one primary
 button per view, and Promorphic/agent action markers (small squares)."""
 from pathlib import Path
+import os
+THEME = os.environ.get("PM_THEME", "dark")
+SUFFIX = "-light" if THEME == "light" else ""
 SRC = Path(__file__).parent / "src"
 
 CSS = """
@@ -8,7 +11,7 @@ CSS = """
 @font-face{font-family:GM;src:url(../fonts/GeistMono.ttf);font-weight:100 900}
 :root{--s0:#0b0c0e;--s1:#14161a;--s2:#1c1f24;--hair:#2a2e35;--ink:#f2efe8;--muted:#a8a49b;--faint:#8a867e;--brand:#f2b135;--onb:#14110a;
 --sans:SG,sans-serif;--mono:GM,monospace}
-*{box-sizing:border-box}html,body{margin:0;background:#0b0c0e}
+*{box-sizing:border-box}html,body{margin:0;background:var(--s0)}
 .frame{width:1536px;padding:40px 48px 40px;background:var(--s0);color:var(--ink);font-family:var(--sans)}
 .eb{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:12px}
 .eb:after{content:"";width:32px;height:1px;background:var(--hair)}
@@ -58,8 +61,15 @@ td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-
 .strike{text-decoration:line-through;color:var(--faint)}
 """
 
-MARK = ('<svg width="20" height="20" viewBox="0 0 32 32"><rect width="18" height="11" fill="#f2efe8"/>'
-        '<rect y="13" width="32" height="6" fill="#f2b135"/><rect x="14" y="21" width="18" height="11" fill="#f2efe8"/></svg>')
+INKC = "#14130f" if THEME == "light" else "#f2efe8"
+MARK = (f'<svg width="20" height="20" viewBox="0 0 32 32"><rect width="18" height="11" fill="{INKC}"/>'
+        f'<rect y="13" width="32" height="6" fill="#f2b135"/><rect x="14" y="21" width="18" height="11" fill="{INKC}"/></svg>')
+
+
+if THEME == "light":
+    CSS = CSS.replace(":root{--s0:#0b0c0e;--s1:#14161a;--s2:#1c1f24;--hair:#2a2e35;--ink:#f2efe8;--muted:#a8a49b;--faint:#8a867e;",
+                      ":root{--s0:#f7f5f0;--s1:#ffffff;--s2:#ede9e1;--hair:#d9d4ca;--ink:#14130f;--muted:#5c5950;--faint:#6e6a60;")
+    assert "--s0:#f7f5f0" in CSS
 
 
 def top(active):
@@ -74,7 +84,7 @@ def page(name, eyebrow, title, inner, caption=None, active="Book"):
     cap = f'<div class="cap">{caption}</div>' if caption else ""
     html = (f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body><div class="frame">'
             f'<div class="eb">{eyebrow}</div><h1>{title}</h1><div class="win">{top(active) if active else ""}{inner}</div>{cap}</div></body></html>')
-    (SRC / f"{name}.html").write_text(html)
+    (SRC / f"{name}{SUFFIX}.html").write_text(html)
 
 
 def wbar(w, lim):

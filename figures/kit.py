@@ -16,6 +16,13 @@ SRC = ROOT / "src"
 C = dict(s0="#0b0c0e", s1="#14161a", s2="#1c1f24", hair="#2a2e35", ink="#f2efe8",
          muted="#a8a49b", faint="#8a867e", brand="#f2b135", onbrand="#14110a")
 
+# Theme: PM_THEME=light renders the paper version (brand guide light tokens), written as <name>-light.
+import os
+THEME = os.environ.get("PM_THEME", "dark")
+if THEME == "light":
+    C.update(s0="#f7f5f0", s1="#ffffff", s2="#ede9e1", hair="#d9d4ca", ink="#14130f", muted="#5c5950", faint="#6e6a60")
+SUFFIX = "-light" if THEME == "light" else ""
+
 _font_cache = {}
 
 
@@ -210,8 +217,8 @@ class Fig:
 
     def write(self):
         cap = f'<div class="cap">{esc(self.caption)}</div>' if self.caption else ""
-        page = PAGE.format(w=self.w, eyebrow=esc(self.eyebrow), title=esc(self.title), svg=self.svg(), cap=cap)
-        (SRC / f"{self.name}.html").write_text(page)
+        page = PAGE.format(**C, w=self.w, eyebrow=esc(self.eyebrow), title=esc(self.title), svg=self.svg(), cap=cap)
+        (SRC / f"{self.name}{SUFFIX}.html").write_text(page)
 
 
 def _rounded(pts, r):
@@ -247,11 +254,11 @@ PAGE = """<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{{font-family:SG;src:url(../fonts/Schibsted.ttf);font-weight:100 900}}
 @font-face{{font-family:GM;src:url(../fonts/GeistMono.ttf);font-weight:100 900}}
 :root{{--sans:SG,sans-serif;--mono:GM,monospace}}
-html,body{{margin:0;background:#0b0c0e}}
-.frame{{width:{w}px;padding:40px 48px 36px;background:#0b0c0e;color:#f2efe8;font-family:var(--sans)}}
-.eb{{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#a8a49b;display:flex;align-items:center;gap:12px}}
-.eb:after{{content:"";width:32px;height:1px;background:#2a2e35}}
+html,body{{margin:0;background:{s0}}}
+.frame{{width:{w}px;padding:40px 48px 36px;background:{s0};color:{ink};font-family:var(--sans)}}
+.eb{{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:{muted};display:flex;align-items:center;gap:12px}}
+.eb:after{{content:"";width:32px;height:1px;background:{hair}}}
 h1{{font-weight:500;font-size:28px;letter-spacing:-.015em;line-height:1.2;margin:12px 0 28px}}
-.cap{{font-family:var(--mono);font-size:12px;color:#8a867e;margin-top:20px;letter-spacing:.01em}}
+.cap{{font-family:var(--mono);font-size:12px;color:{faint};margin-top:20px;letter-spacing:.01em}}
 svg{{display:block}}
 </style></head><body><div class="frame"><div class="eb">{eyebrow}</div><h1>{title}</h1>{svg}{cap}</div></body></html>"""
