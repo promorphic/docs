@@ -2,8 +2,6 @@
 
 **Promorphic is an AI treasury manager for tokenized assets. You set the mandate, the agent manages the portfolio within it, and it can never take custody of your funds.**
 
-*(Working line. To be refined.)*
-
 Tokenized assets are being issued on institutional chains, Canton first among them. The managers who allocate to those assets have to follow them there. Promorphic is the layer that lets them do it: a catalogue of vetted vaults, a mandate written as a contract, and AI agents that act on the book around the clock, inside limits they cannot break.
 
 ![Who is who](img/fig-1-3-ecosystem.png)
@@ -38,6 +36,6 @@ Tokenized assets are being issued on institutional chains, Canton first among th
 
 ## About these docs
 
-These docs describe the product as designed. They come before the code. Issuers, funds, managers and numbers in examples and mockups are fictional. Agent names are examples of models a manager can connect; naming them implies no partnership.
+These docs describe the design of the product. Issuers, funds, managers and numbers in examples and mockups are fictional. Agent names are examples of models a manager can connect; naming them implies no partnership.
 
 Figures and mockups are rendered from source in [`figures/`](figures/). See [`figures/README.md`](figures/README.md) to change and re-render them.

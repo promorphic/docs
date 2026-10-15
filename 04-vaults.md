@@ -39,7 +39,7 @@ The fields are the source of truth; the PDFs are attached as evidence. That is w
 
 The subscribe panel knows the mandate. It shows the weight after the trade and, if a limit would break, the largest size that fits and where else there is room.
 
-## Listing criteria (first draft)
+## Listing criteria
 
 - Issued on Canton under the Canton token standard, with a named issuer, tokenization agent and custodian.
 - Published NAV at least daily, with a stated staleness limit.

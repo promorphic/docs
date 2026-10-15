@@ -49,9 +49,3 @@ Every action is checked twice:
 
 1. **Off-ledger pre-check.** Fast, and it explains itself: which gate, which number, which limit. This is what the manager reads.
 2. **On-ledger mandate check.** The Rebalance choice re-evaluates the limits inside the Daml transaction. If the two checks disagree, the ledger wins and the action fails. A Canton transaction commits whole or not at all, so nothing half-settles.
-
-## Open design questions
-
-- How much of the limit logic lives in Daml versus off-ledger. Daml enforcement is authoritative but needs prices on the ledger; the first version may enforce universe, outflow and per-vault caps on-ledger and the rest off-ledger.
-- Price inputs for on-ledger checks: issuer-signed NAV contracts versus an oracle contract Promorphic operates.
-- Switches across two issuers in one atomic transaction depend on both issuers' workflows supporting it.

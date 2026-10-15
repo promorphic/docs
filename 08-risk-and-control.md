@@ -20,11 +20,9 @@ No single control is trusted alone. The last line is always the same: the agent 
 
 Rejected proposals are kept. A good record shows what the agent was stopped from doing, not only what it did.
 
-## Regulatory posture (to confirm with counsel)
+## Regulatory approach
 
-- **Custody.** Promorphic never holds client assets: holdings are on the manager's party and no Promorphic contract can move them out. The intent is to stay outside custody regimes.
-- **Discretionary management.** Copilot keeps the decision with the manager's approvers. Autopilot is discretionary execution within limits the manager sets, and may need a licence or a licensed partner depending on where the manager and Promorphic operate. This is one reason Autopilot ships after Copilot.
-- **Distribution.** Listing an issuer's vault is distribution in some jurisdictions. Eligibility checks (professional investors only) sit in the vault terms and are checked at subscription.
-- **Records.** The audit record is designed to meet a manager's own books-and-records duties, not to replace them.
-
-None of this is legal advice. Every item above needs a written opinion before launch.
+- **Custody.** Promorphic does not hold client assets. Holdings sit on the manager's own party, and no Promorphic contract can move them out.
+- **Decisions.** In Copilot, every decision is signed by the manager's approvers. Autopilot executes only inside limits the manager has signed, and is offered where the permissions for it are in place.
+- **Distribution.** Vault eligibility, such as professional investors only, sits in the vault terms and is checked at every subscription.
+- **Records.** The audit record supports a manager's own books-and-records duties.
